@@ -146,6 +146,11 @@ class TCPServer(object):
 
         print '<-- %s' % repr(cmd)
 
+        # "\\dump_state" is sent by satnogs hamlib, need to ignore it and send okay state
+        if cmd == '\\dump_state':
+            fd.send('RPRT 0\n')
+            return
+
         # "q", to quit
         if cmd == 'q':
             self.close_client(fd)
