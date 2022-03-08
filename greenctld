@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/python2
 # vim:set ts=4 sw=4 sts=4 ai et smarttab:
 
 # greenctld, a hamlib-compatible driver for the Green Heron Engineering RT-21
