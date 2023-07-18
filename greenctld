@@ -103,6 +103,27 @@ class GreenHeronRotor(object):
         print '<== %d,%d' % (az, el)
         return (az, el,)
 
+    def return_to_180(self):
+        '''
+        Commands the rotator to return to 180 degrees azimuth, 0 degrees elevation
+        Replaces previous method of running "echo "P 180 0" | nc localhost 4533 &> /dev/null &"
+        where it would not close after running. This does.
+        '''
+        self.set_pos(180, 0)
+        # fd.send('Return to 180\n')
+        
+        # loopCount = 0
+
+        # while self.get_pos()[0] != 180:
+        #     if loopCount > 60:
+        #         print '--> Return to 180 loopCount exceeded'
+        #         fd.send('Return to 180 loopCount exceeded\n')
+        #         break
+        #     else:
+        #         time.sleep(1)
+        #         loopCount += 1
+        return
+
 class TCPServer(object):
     '''
     Implements a subset of the rotctld TCP protocol.  gpredict only sends three
@@ -275,6 +296,7 @@ if __name__ == '__main__':
     parser.add_argument('--timeout',   '-t', type=float, default=1.5,   help='Serial timeout')
     parser.add_argument('--port',      '-p', type=int,   default=4533,  help='TCP port')
     parser.add_argument('--get-pos',   '-g', action='store_true', help='Issue get position, and exit; for serial comms test')
+    parser.add_argument('--return-to-180',   '-r', action='store_true', help='Issue set position to 180,0 and exit; for post obs script')
     parser.add_argument('--dummy',           action='store_true', help='Use a dummy rotor, not the real serial device')
     args = parser.parse_args()
 
@@ -285,6 +307,10 @@ if __name__ == '__main__':
 
     if args.get_pos:
         print rotor.get_pos()
+        sys.exit(0)
+
+    if args.return_to_180:
+        rotor.return_to_180()
         sys.exit(0)
 
     server = TCPServer(args.port, rotor)
